@@ -6,6 +6,7 @@ import itertools
 import os
 import fcntl
 import struct
+import json
 
 class coordinate(object):
     def __init__(self,lat,lon):
@@ -92,8 +93,8 @@ def CreateTriangleWaypoint(origin,distance):
 def calculateWP_mode1():
     list_of_waypoint = []
     for i in xrange(int(number_of_drone_for_create_connection)):
-        averate_lat = ( (station_point.lat - node_point.lat)/(number_of_drone_for_create_connection+1)*(i+1) ) + min([station_point.lat, node_point.lat])
-        averate_lon = ( (station_point.lon - node_point.lon)/(number_of_drone_for_create_connection+1)*(i+1) ) + min([station_point.lon, node_point.lon])
+        averate_lat = ( math.fabs(station_point.lat - node_point.lat)/(number_of_drone_for_create_connection+1)*(i+1) ) + min([station_point.lat, node_point.lat])
+        averate_lon = ( math.fabs(station_point.lon - node_point.lon)/(number_of_drone_for_create_connection+1)*(i+1) ) + min([station_point.lon, node_point.lon])
         list_of_waypoint.append([round(averate_lat,6), round(averate_lon,6)])
     for i in xrange(int(number_of_all_drone - number_of_drone_for_create_connection)):
         #arctan = math.atan((node_point.lon - station_point.lon)/(node_point.lat - station_point.lat))
@@ -214,11 +215,11 @@ def readGPS():
 
     time.sleep(1)
 
-    f = open("my_gps.txt", "r")
-    gps = f.read().split(",")
-    f.close()
-    lat = float(gps[2].split(":")[1])/10000000
-    lon = float(gps[3].split(":")[1])/10000000
+    with open('gps_location.json') as gps:
+        gps_location = json.load(gps)
+        lat = gps_location['lat']
+        lon = gps_location['lon']
+
     return coordinate(lat,lon)
 
 def readGPSStation():
@@ -353,6 +354,8 @@ writeStatus('W')
 while 1:
 
     time.sleep(2)
+
+    e = readGPS()
 
     status = checkStatus()
 

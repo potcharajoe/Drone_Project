@@ -1,7 +1,7 @@
 import socket
 import time
 
-list_of_active_drone = []
+list_of_active_drone = ["192.168.8.13"]
 number_of_all_drone = 3
 list_of_all_drone = ["192.168.8.11", "192.168.8.12", "192.168.8.13"]
 ins_list = {}
@@ -80,38 +80,47 @@ def main():
             print "\t\t -show command option"
             continue
 
-        checkActiveDrone()
+        # checkActiveDrone()
 
 
-        if inp.split()[0] == "check":
-            print 'active drone is : ' + str(list_of_active_drone)
-        else:
-            try :
-                if inp.split()[1] == 'd' or inp.split()[1] == 'home':
-                    if (inp.split()[2] not in list_of_active_drone):
-                        print inp.split()[2]+' offline'
-                    else:
-                        if inp.split()[1] == 'd':
-                            ins_list['d'] = inp.lower()
-                            ins_list['addr'] = inp.split()[2]
-                        elif inp.split()[1] == 'home':
-                            ins_list['home'] = inp.lower()
-                elif inp.split()[1] == 'mode':
-                    ins_list['m'] = inp.lower()
-                elif inp.split()[1] == 'station' or inp.split()[1] == 'destination':
-                    ins_list[inp.split()[1]] = inp.lower()
-                elif inp == 'formulate init':
-                    for ins in ins_list:    
-                        sendCommand(ins_list['addr'],ins_list[ins])
-                        time.sleep(1)
-                    for ip in list_of_active_drone:
-                        sendCommand(ip, ins_list['station'])
-                        time.sleep(1) 
-                        sendCommand(ip, inp.list['destination'])
-                        time.sleep(1)    
-            except: 
+        try :
+            if inp.split()[0] == "check":
+                if inp.split()[1] == "drone":
+                    print 'active drone is : ' + str(list_of_active_drone)
+                elif inp.split()[1] == "command":
+                    print ins_list
+                    
+            elif inp.split()[1] == 'd' or inp.split()[1] == 'home':
+                if (inp.split()[2] not in list_of_active_drone):
+                    print inp.split()[2]+' offline'
+                else:
+                    if inp.split()[1] == 'd':
+                        ins_list['d'] = inp.lower()
+                        ins_list['addr'] = inp.split()[2]
+                    elif inp.split()[1] == 'home':
+                        ins_list['home'] = inp.lower()
+            elif inp.split()[1] == 'mode':
+                ins_list['m'] = inp.lower()
+            elif inp.split()[1] == 'station' or inp.split()[1] == 'destination':
+                ins_list[inp.split()[1]] = inp.lower()
+            elif inp == 'formulate init':
+                for ins in ins_list:    
+                    print ins , ins_list[ins]
+                    sendCommand(ins_list['addr'],ins_list[ins])
+                    time.sleep(1)
+                for ip in list_of_active_drone:
+                    print 'send ',ins_list['station'],' to ' ,ip 
+                    sendCommand(ip, ins_list['station'])
+                    time.sleep(1) 
+                    print 'send ',ins_list['destination'],' to ' ,ip 
+                    sendCommand(ip, inp.list['destination'])
+                    time.sleep(1)
+            else:
                 print 'wrong command please use --h for more information'
-                continue
+                continue    
+        except: 
+            # print 'wrong command please use --h for more information'
+            continue
             
 
 if __name__ == "__main__":
