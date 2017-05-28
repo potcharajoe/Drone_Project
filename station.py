@@ -1,7 +1,7 @@
 import socket
 import time
 
-list_of_active_drone = ["192.168.8.13"]
+list_of_active_drone = []
 number_of_all_drone = 3
 list_of_all_drone = ["192.168.8.11", "192.168.8.12", "192.168.8.13"]
 ins_list = {}
