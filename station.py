@@ -80,7 +80,7 @@ def main():
             print "\t\t -show command option"
             continue
 
-        # checkActiveDrone()
+        checkActiveDrone()
 
 
         try :
