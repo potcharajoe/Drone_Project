@@ -105,7 +105,7 @@ def main():
                 ins_list[inp.split()[1]] = inp.lower()
             elif inp == 'formulate init':
                 for ins in ins_list:    
-                    print ins , ins_list[ins]
+                    print ins +' : '+ ins_list[ins]
                     sendCommand(ins_list['addr'],ins_list[ins])
                     time.sleep(1)
                 for ip in list_of_active_drone:
